@@ -23,7 +23,7 @@ module prbs9(
              buffer <= SEED;
           end
           else begin
-            buffer <= {buffer[7]^buffer[4]^ 1'b1 , buffer[8:1]};
+            buffer <= {buffer[8]^buffer[4]^ 1'b1 , buffer[8:1]};
           end
     end
 endmodule

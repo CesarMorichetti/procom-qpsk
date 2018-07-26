@@ -13,7 +13,7 @@ SAMPLE_RATE = 100000000
 SYMBOL_RATE = SAMPLE_RATE/OVERSAMPLING
 
 
-seedI = [0, 0, 0, 1, 0, 0, 0, 1, 1]
+seedI = [0, 1, 0, 1, 0, 1, 0, 1, 1]
 seedQ = [0, 1, 1, 1, 1, 1, 1, 1, 1]
 def ff(fix):
     list = []
@@ -27,12 +27,14 @@ def list_to_dec(list):
 
 
 def conv_tx(coef, x, y):
+    #for ptr in range(len(y)):
+    #    print y[ptr].fValue
     suma = DeFixedInt(roundMode='trunc',
                          signedMode='S',
-                         intWidth=9,
+                         intWidth=11,
                          fractWidth=7,
                          saturateMode='saturate')
-    for a in coef:
+    for a in reversed(coef):
         if x[a] == 1:
             suma.value = (suma + y[a]).fValue
         else:
@@ -49,7 +51,7 @@ def convolve(x, y):
     return suma_total
 
 def prbs(seed):
-    prbs9 = seed[8]
+    prbs9 = seed[0]
     prbs5 = seed[4]
     xor = (prbs9 ^ prbs5 ^ 0b1)
     seed.pop(8)
@@ -149,6 +151,10 @@ def main():
     fixed_rrcos = arrayFixedInt(8,
                                 7,
                                 rrcos)
+    #for ptr in range(len(rrcos)):
+    #    print ptr, rrcos[ptr], '\t', fixed_rrcos[ptr].fValue
+
+
     for clk in range(511):
 
         ########################################################################
@@ -156,8 +162,8 @@ def main():
         # Este modulo se ejecuta cada 4 ciclos de reloj, la salida son dos bits,
         # uno para y el otro para Q
         if clk % 4 == 0:
-            new_prbsI = prbs_test_ber(new_prbsI)
-            new_prbsQ = prbs_test_ber(new_prbsQ)
+            new_prbsI = prbs(new_prbsI)
+            new_prbsQ = prbs(new_prbsQ)
 
         ########################################################################
 
@@ -167,17 +173,19 @@ def main():
         reg_tx_re_i.insert(0, bit_re_o)
         reg_tx_im_i.pop()
         reg_tx_im_i.insert(0, bit_im_o)
-
+        print reg_tx_re_i
         coef = []
 
         for j in range(count_coef, count_coef+21, 4):
             coef.append(j)
+        print coef
         if count_coef == 3:
             count_coef = 0
         else:
             count_coef += 1
         conv_tx_re = conv_tx(coef, reg_tx_re_i, fixed_rrcos)
         conv_tx_im = conv_tx(coef, reg_tx_im_i, fixed_rrcos)
+        print conv_tx_re.fValue
         ########################################################################
 
         ########################################################################

@@ -31,7 +31,7 @@ module tx(
     //        coef[i] = i;
     //    end 
           for (i=0; i<24; i=i+1)begin
-            coef[i] <= COEF[((i+1)*8)-1 -:8];
+            coef[i] <= COEF[191-(i*8) -:8];
            end
     end
     
@@ -44,11 +44,11 @@ module tx(
             buffer_in <= 0;
         end
         else begin
-            up_count <= up_count + 1'b1;
-            o_tx <= suma;
             if(up_count == 2'b11)begin
                 buffer_in <= {i_tx, buffer_in[5:1]};
             end
+            up_count <= up_count + 1'b1;
+            o_tx <= suma;
         end
     end
     
