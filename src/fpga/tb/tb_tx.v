@@ -14,7 +14,7 @@ parameter SEED   = `SEED;
 initial begin
         clk_tx = 1'b0;
         reset = 1'b1;
-        clk_prbs = 1'b0;
+        clk_prbs = 1'b1;
         //i_tx = 1'b0;
         #16 reset  = 1'b0;//16/8=2(pasaron 2 de clk_prbs) y 16/2=8(pasaron 8 del clk_tx)
         #16 reset  = 1'b1;

@@ -19,7 +19,7 @@ module tx(
     input   rst;
     
     wire      reset;
-    reg [5:0] buffer_in;
+    reg [23:0] buffer_in;
     reg signed [15:0] o_tx;
     reg [1:0] up_count;
     reg signed [7:0] coef [23:0];
@@ -44,9 +44,7 @@ module tx(
             buffer_in <= 0;
         end
         else begin
-            if(up_count == 2'b11)begin
-                buffer_in <= {i_tx, buffer_in[5:1]};
-            end
+            buffer_in <= {i_tx, buffer_in[23:1]};
             up_count <= up_count + 1'b1;
             o_tx <= suma;
         end
@@ -58,7 +56,7 @@ module tx(
         suma = {16{1'b0}};
         for (i=0; i<6; i=i+1)
         begin
-            if(buffer_in[i] == 1'b1)begin
+            if(buffer_in[(i*4)+up_count] == 1'b1)begin
                 suma = suma + coef[(i*4)+up_count];
             end
             else begin
@@ -66,4 +64,6 @@ module tx(
             end
         end
     end
+    
+    //SAT
 endmodule
