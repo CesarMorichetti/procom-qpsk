@@ -8,7 +8,7 @@ reg clk_tx;
 reg clk_prbs;
 reg reset;
 wire o_prbs;
-wire [15:0] o_tx;
+wire [7:0] o_tx;
 parameter SEED   = `SEED;
 
 initial begin

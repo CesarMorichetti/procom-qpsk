@@ -1,7 +1,7 @@
 import numpy as np
 from tool._fixedInt import *
 import random
-import DSPtools
+#import DSPtools
 import matplotlib.pyplot as plt
 import commpy
 
@@ -31,10 +31,11 @@ def conv_tx(coef, x, y):
     #    print y[ptr].fValue
     suma = DeFixedInt(roundMode='trunc',
                          signedMode='S',
-                         intWidth=11,
+                         intWidth=8,
                          fractWidth=7,
                          saturateMode='saturate')
-    for a in reversed(coef):
+    suma.value = 0
+    for a in coef:
         if x[a] == 1:
             suma.value = (suma + y[a]).fValue
         else:
@@ -147,12 +148,12 @@ def main():
                                ROLL_OFF,
                                1. / SYMBOL_RATE,
                                SAMPLE_RATE)[1]
-    rrcos = rrcos / np.sqrt(OVERSAMPLING)
+    #rrcos = rrcos / np.sqrt(OVERSAMPLING)
     fixed_rrcos = arrayFixedInt(8,
                                 7,
                                 rrcos)
-    #for ptr in range(len(rrcos)):
-    #    print ptr, rrcos[ptr], '\t', fixed_rrcos[ptr].fValue
+    for ptr in range(len(rrcos)):
+        print ptr, rrcos[ptr], '\t', fixed_rrcos[ptr].fValue
 
 
     for clk in range(511):
@@ -169,10 +170,10 @@ def main():
 
         ########################################################################
         #CONVOLUCION TX
-        reg_tx_re_i.pop()
-        reg_tx_re_i.insert(0, bit_re_o)
-        reg_tx_im_i.pop()
-        reg_tx_im_i.insert(0, bit_im_o)
+        reg_tx_re_i.pop(0)
+        reg_tx_re_i.insert(23, bit_re_o)
+        reg_tx_im_i.pop(0)
+        reg_tx_im_i.insert(23, bit_im_o)
         print reg_tx_re_i
         coef = []
 
@@ -192,10 +193,10 @@ def main():
         # MODULO RECEPTOR
         # input 1 bit de la senal transmitida que lo coloca en un shift register
         # para convolucionar con rrcos
-        reg_rx_re_i.pop(23)
-        reg_rx_re_i.insert(0, tx_re_o)
-        reg_rx_im_i.pop(23)
-        reg_rx_im_i.insert(0, tx_im_o)
+        reg_rx_re_i.pop(0)
+        reg_rx_re_i.insert(23, tx_re_o)
+        reg_rx_im_i.pop(0)
+        reg_rx_im_i.insert(23, tx_im_o)
         conv_rx_re = convolve(reg_rx_re_i, fixed_rrcos)
         conv_rx_im = convolve(reg_rx_im_i, fixed_rrcos)
 
@@ -289,7 +290,7 @@ def main():
     plt.figure(5)
     plt.title('constelacion')
     plt.plot(log_down_re, log_down_im, '.')
-    DSPtools.eyediagram(float_rx_re[14:], 4, 1, OVERSAMPLING)
+    eyediagram(float_rx_re[14:], 4, 1, OVERSAMPLING)
     plt.show()
 
     """
