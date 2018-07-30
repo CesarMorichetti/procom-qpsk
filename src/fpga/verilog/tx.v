@@ -2,6 +2,7 @@
 
 module tx(
             i_tx,
+            enable,
             o_tx,
             clk,
             rst
@@ -17,6 +18,7 @@ module tx(
     input   i_tx;
     input   clk;
     input   rst;
+    input   enable;
     
     wire      reset;
     reg [23:0] buffer_in;
@@ -25,14 +27,14 @@ module tx(
     reg signed [7:0] coef [23:0];
     reg signed [10:0] suma;//porque el log en base 2 de 6 que son seis sumas me da 3 entonces yo nunca voy a necesitar mas de 10 bits    
     integer i;
-    assign reset    = ~rst;
+    assign reset    = rst;
     initial begin
     //    for (i=0; i<24; i = i + 1)begin
-    //        coef[i] = 127;
+    //        coef[i] = i;
     //    end 
           for (i=0; i<24; i=i+1)begin
             coef[i] <= COEF[191-(i*8) -:8];
-          end
+           end
     end
     
     
@@ -42,14 +44,15 @@ module tx(
         if(reset)begin
             up_count <= 0;
             buffer_in <= 0;
+            suma <= 0;
         end
         else begin
             buffer_in <= {i_tx, buffer_in[23:1]};
-            up_count <= up_count + 1'b1;
-            //o_tx <= suma;
+            up_count <= up_count + 1;
+            o_tx <= suma;
         end
     end
-    
+    /*
     //SUMA
     always@*
     begin
@@ -68,12 +71,10 @@ module tx(
             o_tx = 8'b01111111; 
         end
         else if(suma[10] & ~&suma[9:7])begin
-                o_tx = 8'b10000000;    
-             end
-             else begin
-                o_tx = suma[7:0];
-             end
-    end
-    
-
+            o_tx = 8'b10000000;    
+         end
+         else begin
+            o_tx = suma[7:0];
+         end
+    end*/
 endmodule

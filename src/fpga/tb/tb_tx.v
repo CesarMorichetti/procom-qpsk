@@ -8,13 +8,13 @@ reg clk_tx;
 reg clk_prbs;
 reg reset;
 wire o_prbs;
-wire [7:0] o_tx;
+wire [15:0] o_tx;
 parameter SEED   = `SEED;
 
 initial begin
         clk_tx = 1'b0;
         reset = 1'b1;
-        clk_prbs = 1'b1;
+        clk_prbs = 1'b0;
         //i_tx = 1'b0;
         #16 reset  = 1'b0;//16/8=2(pasaron 2 de clk_prbs) y 16/2=8(pasaron 8 del clk_tx)
         #16 reset  = 1'b1;

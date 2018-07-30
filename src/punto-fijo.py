@@ -148,12 +148,12 @@ def main():
                                ROLL_OFF,
                                1. / SYMBOL_RATE,
                                SAMPLE_RATE)[1]
-    #rrcos = rrcos / np.sqrt(OVERSAMPLING)
+    rrcos = rrcos / np.sqrt(OVERSAMPLING)
     fixed_rrcos = arrayFixedInt(8,
                                 7,
                                 rrcos)
-    for ptr in range(len(rrcos)):
-        print ptr, rrcos[ptr], '\t', fixed_rrcos[ptr].fValue
+    #for ptr in range(len(rrcos)):
+    #    print ptr, rrcos[ptr], '\t', fixed_rrcos[ptr].fValue
 
 
     for clk in range(511):
@@ -165,6 +165,7 @@ def main():
         if clk % 4 == 0:
             new_prbsI = prbs(new_prbsI)
             new_prbsQ = prbs(new_prbsQ)
+            print new_prbsI[8]
 
         ########################################################################
 
@@ -174,19 +175,19 @@ def main():
         reg_tx_re_i.insert(23, bit_re_o)
         reg_tx_im_i.pop(0)
         reg_tx_im_i.insert(23, bit_im_o)
-        print reg_tx_re_i
+        #print reg_tx_re_i
         coef = []
 
         for j in range(count_coef, count_coef+21, 4):
             coef.append(j)
-        print coef
+        #print coef
         if count_coef == 3:
             count_coef = 0
         else:
             count_coef += 1
         conv_tx_re = conv_tx(coef, reg_tx_re_i, fixed_rrcos)
         conv_tx_im = conv_tx(coef, reg_tx_im_i, fixed_rrcos)
-        print conv_tx_re.fValue
+        #print conv_tx_re.fValue
         ########################################################################
 
         ########################################################################
@@ -234,11 +235,11 @@ def main():
                 error_re += 1
             if ber_im_tx[ber_mult] ^ ber_im_i != 0:
                 error_re += 1
-            if (clk/4) % 8 == 0 and clk != 0:
-                print log_prbs_re
-                print log_down_re
-                print ber_mult
-                print error_re
+            if (clk/4) % 511 == 0 and clk != 0:
+                #print log_prbs_re
+                #print log_down_re
+                #print ber_mult
+                #print error_re
                 if error_re == 0:
                     led = 1
                 else:

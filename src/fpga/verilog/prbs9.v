@@ -1,12 +1,13 @@
 `timescale 1ns / 1ps
 `define SEED 0
-module prbs9(
+module prbs9(   enable,
                 o_bit,
                 rst,
                 clk
     );
     // Ports
     output  o_bit;
+    input enable;
     input   clk;
     input   rst;
     // Parameters
@@ -15,7 +16,7 @@ module prbs9(
     wire    reset;
     reg     [8:0]buffer;
     
-    assign reset    = ~rst;
+    assign reset    = rst;
     assign o_bit    = buffer[0];
     
     always@(posedge clk) begin
@@ -23,7 +24,9 @@ module prbs9(
              buffer <= SEED;
           end
           else begin
-            buffer <= {buffer[8]^buffer[4]^ 1'b1 , buffer[8:1]};
+            if(enable)begin
+                buffer <= {buffer[8]^buffer[4]^ 1'b1 , buffer[8:1]};
+            end
           end
     end
 endmodule
