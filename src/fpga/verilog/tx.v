@@ -27,7 +27,7 @@ module tx(
     reg signed [7:0] coef [23:0];
     reg signed [10:0] suma;//porque el log en base 2 de 6 que son seis sumas me da 3 entonces yo nunca voy a necesitar mas de 10 bits    
     integer i;
-    assign reset    = rst;
+    //assign reset    = rst;
     initial begin
     //    for (i=0; i<24; i = i + 1)begin
     //        coef[i] = i;
@@ -41,18 +41,20 @@ module tx(
     //Este es el buffer de entrada que cada 4 clk tomo una muestra 
     always@(posedge clk)
     begin
-        if(reset)begin
+        if(rst)begin
             up_count <= 0;
             buffer_in <= 0;
             suma <= 0;
         end
         else begin
-            buffer_in <= {i_tx, buffer_in[23:1]};
-            up_count <= up_count + 1;
-            o_tx <= suma;
+            if (enable)begin
+                buffer_in <= {i_tx, buffer_in[23:1]};
+                up_count <= up_count + 1;
+                o_tx <= suma;
+            end
         end
     end
-    /*
+    
     //SUMA
     always@*
     begin
@@ -76,5 +78,5 @@ module tx(
          else begin
             o_tx = suma[7:0];
          end
-    end*/
+    end
 endmodule

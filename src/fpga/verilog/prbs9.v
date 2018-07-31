@@ -16,11 +16,10 @@ module prbs9(   enable,
     wire    reset;
     reg     [8:0]buffer;
     
-    assign reset    = rst;
-    assign o_bit    = buffer[0];
+
     
     always@(posedge clk) begin
-          if(reset) begin
+          if(rst) begin
              buffer <= SEED;
           end
           else begin
@@ -29,4 +28,6 @@ module prbs9(   enable,
             end
           end
     end
+    //assign reset    = rst;
+    assign o_bit    = buffer[0];
 endmodule

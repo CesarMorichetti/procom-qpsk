@@ -1,3 +1,4 @@
+`define SEED 9'b010101011
 `timescale 1ns / 1ps
 
 module tb_top_level();

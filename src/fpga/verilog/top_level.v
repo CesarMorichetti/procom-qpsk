@@ -39,7 +39,7 @@ module top_level(
     else begin
         clk_count <= clk_count + 1;
         if (clk_count==0)begin
-            enable    = 1;
+            enable = 1;
         end
         else begin
             enable = 0;
