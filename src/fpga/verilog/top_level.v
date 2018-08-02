@@ -12,12 +12,13 @@ module top_level(
     // Ports
     input       rst;
     input       CLK100MHZ;
-    input [1:0] i_switch;
+    input [3:0] i_switch;
     
     parameter SEED   = `SEED;
     
     wire        o_prbs;
     wire [7:0]  o_tx;
+    wire        o_rx;
     wire        reset;
     wire        enable_tx;
     wire        enable_rx;
@@ -68,5 +69,16 @@ module top_level(
          .i_tx (o_prbs),
          .o_tx (o_tx)
     );
+     rx
+     #(
+     )
+     rx_r(
+     .clk(CLK100MHZ),
+     .rst(reset),
+     .enable(enable_rx),
+     .i_rx(o_tx),
+     .i_sw(i_switch[3:1]),
+     .o_rx(o_rx)
+     );
     
 endmodule

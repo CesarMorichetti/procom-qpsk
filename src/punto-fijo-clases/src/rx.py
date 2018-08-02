@@ -3,7 +3,7 @@ from tool._fixedInt import *
 class rx(object):
     def __init__(self, coeficients):
         self.coeficients = coeficients
-
+    """
     def run(self, i_rx, enable):
         if enable:
             self.suma.value = 0
@@ -13,6 +13,10 @@ class rx(object):
                 self.suma.value = (self.suma + i).fValue
         self.reg_rx_i.pop(0)
         self.reg_rx_i.insert(23, i_rx)
+    """
+    def run(self, i_rx, enable):
+
+        mult = multiplication(i_rx)
 
 
     @property
@@ -20,6 +24,12 @@ class rx(object):
         return self.suma
 
     def reset(self):
-        self.mult = [DeFixedInt(9, 7) for i in range(24)]
+        #self.mult = [DeFixedInt(9, 7) for i in range(24)]
         self.suma = DeFixedInt(9, 7)
         self.reg_rx_i = [DeFixedInt(9, 7) for i in range(24)]
+
+    def multiplication(self, i_rx):
+        multiplication = []
+        for coef in self.coeficients:
+            multiplication.append(rx_in * coef)
+        return multiplication

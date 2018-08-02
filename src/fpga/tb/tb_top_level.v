@@ -5,13 +5,13 @@ module tb_top_level();
 
 reg         clk;
 reg         reset;
-reg [1:0]   i_sw;
+reg [3:0]   i_sw;
 parameter SEED   = `SEED;
 
 initial begin
         clk = 1'b0;
         reset = 1'b1;
-        i_sw = 2'b11;;
+        i_sw = 4'b1011;;
         #16 reset  = 1'b0;//16/8=2(pasaron 2 de clk_prbs) y 16/2=8(pasaron 8 del clk_tx)
         #5 reset  = 1'b1;
         #1000 $finish;
