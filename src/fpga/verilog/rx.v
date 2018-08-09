@@ -44,21 +44,31 @@ module rx(
             down_counter <= 0;
         end
         else begin
-            if (down_counter == 3)begin 
-                down_counter <= 0;
+            if(enable) begin
+                if (down_counter == 3)begin 
+                    down_counter <= 0;
+                end
+                else begin
+                    down_counter <= down_counter+1;
+                end
+                for (i=0; i<24; i=i+1)begin
+                    mult[i] = coef[i]*i_rx;
+                end
+                suma[0] <= mult[23];
+                for (i=1; i<24; i=i+1)begin
+                    suma[i] <= mult[23-i] + suma[i-1]; 
+                end
+                if (down_counter == i_sw)begin
+                    o_rx = ~suma[23][17];
+                end
             end
             else begin
-                down_counter <= down_counter+1;
-            end
-            for (i=0; i<24; i=i+1)begin
-                mult[i] = coef[i]*i_rx;
-            end
-            suma[23] <= mult[23];
-            for (i=22; i>0; i=i-1)begin
-                suma[i] <= mult[i] + suma[i+1]; 
-            end
-            if (down_counter == i_sw)begin
-                o_rx = ~suma[23][17];
+                down_counter <= down_counter;
+                o_rx <= o_rx;
+                for (i=0; i<24; i=i+1) begin
+                    mult[i] <= mult[i];
+                    suma[i] <= suma[i];
+                end
             end
         end
     end 

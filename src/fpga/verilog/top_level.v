@@ -22,7 +22,9 @@ module top_level(
     wire        reset;
     wire        enable_tx;
     wire        enable_rx;
+    wire        o_led;
     reg         enable;
+    reg         enable_ber;
     reg [1:0]   clk_count;
 
     
@@ -36,14 +38,17 @@ module top_level(
     if(reset)begin
         clk_count = 0;
         enable = 0;
+        enable_ber = 0;
     end
     else begin
         clk_count <= clk_count + 1;
         if (clk_count==0)begin
-            enable = 1;
+            enable <= 1;
+            enable_ber <= 1;
         end
         else begin
-            enable = 0;
+            enable <= 0;
+            enable_ber <= 0;
         end
     end
     end
@@ -80,5 +85,17 @@ module top_level(
      .i_sw(i_switch[3:1]),
      .o_rx(o_rx)
      );
+     ber
+     #(
+     )
+     ber_r(
+     .clk(CLK100MHZ),
+     .rst(reset),
+     .enable(enable_ber),
+     .i_prbs(o_prbs),
+     .i_rx(o_rx),
+     .o_err(o_led)
+     );
+     
     
 endmodule

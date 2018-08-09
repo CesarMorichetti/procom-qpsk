@@ -52,6 +52,11 @@ module tx(
                 up_count <= up_count + 1;
                 o_tx <= suma;
             end
+            else begin
+                buffer_in <= buffer_in;
+                up_count <= up_count;
+                o_tx <= o_tx;
+            end
         end
     end
     
